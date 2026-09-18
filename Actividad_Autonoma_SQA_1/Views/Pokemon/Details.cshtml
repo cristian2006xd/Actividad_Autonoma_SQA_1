@@ -1,0 +1,99 @@
+﻿@model Actividad_Autonoma_SQA_1.Models.PokemonDetail
+
+@{
+    ViewData["Title"] = $"Análisis - {Model.Name}";
+}
+
+<style>
+    .details-card {
+        background: linear-gradient(145deg, #131c31, #0f172a);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .stat-bar-bg {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        overflow: hidden;
+        height: 8px;
+    }
+
+    .stat-fill {
+        background: linear-gradient(90deg, #ef4444, #f87171);
+        height: 100%;
+        border-radius: 4px;
+    }
+
+    .btn-back {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #e2e8f0;
+        transition: all 0.2s;
+    }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: white;
+        }
+</style>
+
+<div class="container my-4">
+    <a asp-action="Index" class="btn btn-back rounded-pill px-4 mb-4 shadow-sm fw-semibold">&larr; VOLVER AL LISTADO</a>
+
+    <div class="row details-card rounded-4 p-4 p-md-5 align-items-center flex-md-row">
+        <!-- Columna de Imagen -->
+        <div class="col-md-5 text-center mb-4 mb-md-0 p-4 rounded-4" style="background: radial-gradient(circle, rgba(239, 68, 68, 0.08) 0%, rgba(0,0,0,0.3) 100%);">
+            <span class="badge bg-dark text-danger border border-danger border-opacity-25 fs-6 mb-3 px-3 py-1 rounded-pill font-monospace">ID #@Model.Id</span>
+            <div class="py-3">
+                <img src="@Model.OfficialArtwork" class="img-fluid" alt="@Model.Name" style="max-height: 320px; object-fit: contain; filter: drop-shadow(0 12px 12px rgba(0,0,0,0.6));">
+            </div>
+        </div>
+
+        <!-- Columna de Datos -->
+        <div class="col-md-7 ps-md-5">
+            <h1 class="text-capitalize text-light fw-bold display-4 mb-2 gaming-font">@Model.Name</h1>
+
+            <div class="mb-4">
+                @foreach (var t in Model.Types)
+                {
+                    <span class="badge bg-dark text-danger border border-danger border-opacity-50 text-capitalize me-2 px-3 py-2 rounded-pill fw-bold">@t.Type.Name</span>
+                }
+            </div>
+
+            <hr style="border-color: rgba(255,255,255,0.1);" />
+
+            <div class="row text-center my-4">
+                <div class="col-6 p-3 rounded-3 me-2" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                    <span class="text-secondary d-block small uppercase font-monospace">ALTURA</span>
+                    <strong class="fs-4 text-light gaming-font">@(Model.Height * 10) cm</strong>
+                </div>
+                <div class="col-6 p-3 rounded-3" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                    <span class="text-secondary d-block small uppercase font-monospace">PESO</span>
+                    <strong class="fs-4 text-light gaming-font">@((Model.Weight / 10.0)) kg</strong>
+                </div>
+            </div>
+
+            <h5 class="text-secondary fs-6 mb-3 gaming-font tracking-wider">ESTADÍSTICAS BASE</h5>
+
+            <div class="d-flex flex-column gap-3">
+                @foreach (var stat in Model.Stats)
+                {
+                    <div>
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span class="text-capitalize text-light fw-semibold">@stat.Stat.Name</span>
+                            <span class="text-danger font-monospace fw-bold">@stat.BaseStat</span>
+                        </div>
+                        <div class="stat-bar-bg">
+                            @{
+                                // Calculamos un porcentaje aproximado basado en un max de 150 para la barra
+                                int percentage = Math.Min(100, (stat.BaseStat * 100) / 150);
+                            }
+                            <div class="stat-fill" style="width: @percentage%;"></div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
